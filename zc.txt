@@ -1,0 +1,21 @@
+#include <DHT.h>              
+#include <SoftwareSerial.h>   
+SoftwareSerial XBee(10, 11);  
+DHT dht(4, DHT11);             
+void setup() { 
+XBee.begin(9600);  
+dht.begin();        
+} 
+void loop() { 
+float t = dht.readTemperature(); 
+float h = dht.readHumidity();    
+if (!isnan(t) && !isnan(h)) { 
+XBee.print("<");   
+XBee.print(t);     
+    XBee.print(",");    
+    XBee.print(h);      
+    XBee.print(">");  
+  } 
+ 
+  delay(2000);   
+}
