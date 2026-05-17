@@ -1,0 +1,49 @@
+#include <SPI.h> 
+#include <LoRa.h> 
+ 
+#define ss 10 
+#define rst 9 
+#define dio0 2 
+ 
+int led = 7; 
+ 
+void setup() { 
+  Serial.begin(9600); 
+  pinMode(led, OUTPUT); 
+ 
+  LoRa.setPins(ss, rst, dio0); 
+ 
+  if (!LoRa.begin(433E6)) { 
+    Serial.println("LoRa init failed"); 
+    while (1); 
+  } 
+ 
+  Serial.println("Receiver Ready"); 
+} 
+ 
+void loop() { 
+ 
+  int packetSize = LoRa.parsePacket(); 
+ 
+  if (packetSize > 0) { 
+ 
+    String received = ""; 
+ 
+    while (LoRa.available()) { 
+      received += (char)LoRa.read(); 
+    } 
+ 
+    received.trim(); 
+    received.toUpperCase(); 
+ 
+    Serial.print("Received: "); 
+    Serial.println(received); 
+ 
+    if (received == "ON") { 
+      digitalWrite(led, HIGH); 
+    } 
+    else if (received == "OFF") { 
+      digitalWrite(led, LOW); 
+    } 
+  } 
+} 
