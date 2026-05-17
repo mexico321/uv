@@ -1,0 +1,37 @@
+#include <Wire.h>         
+#include <LCD_I2C.h>      
+#include <SoftwareSerial.h> 
+ 
+SoftwareSerial XBee(10,11);  
+LCD_I2C lcd(0x27,16,2);  
+ 
+String d=""; 
+void setup(){ 
+  XBee.begin(9600);   
+  lcd.begin();        
+  lcd.backlight();    
+} 
+void loop() 
+{ 
+  if(XBee.available()){       
+     
+    char c = XBee.read();       
+     
+    if(c=='<') d="";            
+     
+    else if(c=='>'){           
+       
+      int i=d.indexOf(',');    
+       
+      lcd.setCursor(0,0); 
+      lcd.print("Temp:"); 
+      lcd.print(d.substring(0,i));  
+       
+      lcd.setCursor(0,1); 
+      lcd.print("Hum:"); 
+      lcd.print(d.substring(i+1));   
+    } 
+     
+    else d+=c;   
+  } 
+} 
