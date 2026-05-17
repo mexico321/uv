@@ -1,0 +1,48 @@
+#include <SPI.h> 
+#include <LoRa.h> 
+#define ss 10 
+#define rst 9 
+#define dio0 2 
+#define buttonPin 3 
+int lastButtonState = HIGH; 
+bool ledState = false;  
+void setup() { 
+Serial.begin(9600); 
+pinMode(buttonPin, INPUT_PULLUP); 
+  LoRa.setPins(ss, rst, dio0); 
+ 
+  if (!LoRa.begin(433E6)) { 
+    Serial.println("LoRa init failed"); 
+    while (1); 
+  } 
+ 
+  Serial.println("Transmitter Ready (Toggle Mode)"); 
+} 
+ 
+void loop() { 
+ 
+  int currentState = digitalRead(buttonPin); 
+  
+  if (lastButtonState == HIGH && currentState == LOW) { 
+ 
+    ledState = !ledState;
+ 
+    if (ledState) { 
+      Serial.println("Sending ON"); 
+ 
+      LoRa.beginPacket(); 
+      LoRa.print("ON"); 
+      LoRa.endPacket(); 
+    } else { 
+      Serial.println("Sending OFF"); 
+ 
+      LoRa.beginPacket(); 
+      LoRa.print("OFF"); 
+      LoRa.endPacket(); 
+    } 
+ 
+    delay(200);  
+  } 
+ 
+  lastButtonState = currentState; 
+}
