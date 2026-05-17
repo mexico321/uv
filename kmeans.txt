@@ -1,0 +1,13 @@
+load fisheriris.mat
+
+[idx,C,sumd] = kmeans(meas,3);
+
+gscatter(meas(:,1),meas(:,2),idx)
+
+xlabel('Sepal Length')
+ylabel('Sepal Width')
+title('K Means Clustering')
+
+silhouette(meas,idx)
+
+total_WCSS = sum(sumd)
