@@ -1,0 +1,29 @@
+#define BLYNK_PRINT Serial
+#define BLYNK_TEMPLATE_ID "TMPL3aQU9cSLr"
+#define BLYNK_TEMPLATE_NAME "Akhila"
+#define BLYNK_AUTH_TOKEN "g0vdN3ZrejEmAW9lXA-heuCqyE1dZAdP"
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+char ssid[] = "vishnu";
+char pass[] = "12345678";
+int ledPin = 0; //D3
+BLYNK_WRITE(V0)
+{
+  int value = param.asInt();
+
+  digitalWrite(ledPin, value);
+}
+
+void setup()
+{
+  Serial.begin(9600);
+
+  pinMode(ledPin, OUTPUT);
+
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+}
+
+void loop()
+{
+  Blynk.run();
+}
