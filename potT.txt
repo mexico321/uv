@@ -1,0 +1,39 @@
+#include <ESP8266WiFi.h> 
+const char* ssid = "Your WiFi Name "; 
+const char* password = "Your WiFi Password "; 
+const char* server = "api.thingspeak.com"; 
+String apiKey = "NDPS4L0CZFAZ9R73"; 
+WiFiClient client;   
+void setup() { 
+Serial.begin(115200);
+delay(10); 
+Serial.println("Connecting to WiFi..."); 
+WiFi.begin(ssid, password); 
+while (WiFi.status() != WL_CONNECTED) { 
+delay(500); 
+Serial.print("."); 
+} 
+Serial.println("\nWiFi connected"); 
+} 
+void loop() { 
+  int sensorValue = analogRead(A0); 
+ 
+  Serial.print("Pot Value: "); 
+  Serial.println(sensorValue); 
+ 
+  if (client.connect(server, 80)) { 
+    String url = "/update?api_key=" + apiKey + "&field1=" + String(sensorValue); 
+ 
+    client.print(String("GET ") + url + " HTTP/1.1\r\n" + 
+                 "Host: " + server + "\r\n" + 
+                 "Connection: close\r\n\r\n"); 
+ 
+    Serial.println("Data sent to ThingSpeak"); 
+  } else { 
+    Serial.println("Connection failed"); 
+  } 
+ 
+  client.stop(); 
+ 
+  delay(15000);
+}
