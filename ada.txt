@@ -1,0 +1,42 @@
+#include <ESP8266WiFi.h>
+#include "AdafruitIO_WiFi.h"
+#define WIFI_SSID "Your WiFi Name"
+#define WIFI_PASS "Your WiFi Password"
+#define AIO_USERNAME "analogdata"
+#define AIO_KEY "aio_BYnw463CbStBUJicO0PlOEy021nB"
+
+AdafruitIO_WiFi io(AIO_USERNAME, AIO_KEY, WIFI_SSID, WIFI_PASS);
+
+AdafruitIO_Feed *analogFeed = io.feed("analog-data");
+
+void setup() {
+
+  Serial.begin(115200);
+
+  io.connect();
+
+  Serial.print("Connecting to Adafruit IO");
+
+  while(io.status() < AIO_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+
+  Serial.println();
+  Serial.println("Connected to Adafruit IO");
+}
+
+void loop() {
+
+
+  io.run();
+
+  int analogValue = analogRead(A0);
+
+  Serial.print("Analog Value: ");
+  Serial.println(analogValue);
+
+  analogFeed->save(analogValue);
+
+  delay(5000);
+}
