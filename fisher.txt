@@ -1,0 +1,4 @@
+load fisheriris.mat
+>> T = array2table(meas,...
+'VariableNames',{'SepalLength','Sepalwidth','PetalLength','Petalwidth'});
+>> T.Species=categorical(species);
